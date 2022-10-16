@@ -1,12 +1,14 @@
 package pe.client.custom.app.service;
 
+import pe.client.custom.app.dto.CheckTokenResponseDto;
+import pe.client.custom.app.dto.GetTokenResponseDto;
 import pe.client.custom.app.exception.InternalServerException;
 import pe.client.custom.app.exception.UnauthorizedException;
 
 public interface OAuthService {
-    Object getToken(String xAuthorization, String grantType, String scope) throws UnauthorizedException, InternalServerException;
+    GetTokenResponseDto getToken(String xAuthorization, String grantType, String scope) throws UnauthorizedException, InternalServerException;
 
-    Object checkToken(String token);
+    CheckTokenResponseDto checkToken(String xAuthorization, String token);
 
     Object revokeToken(String xAuthorization, String xAuthToken);
 }

@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import pe.client.custom.app.config.properties.ClientsDetail;
 import pe.client.custom.app.domain.ClientInformation;
+import pe.client.custom.app.dto.CheckTokenResponseDto;
 import pe.client.custom.app.dto.GetTokenResponseDto;
 import pe.client.custom.app.exception.BadRequestException;
 import pe.client.custom.app.exception.InternalServerException;
@@ -35,7 +36,7 @@ public class OAuth2ServiceImpl implements OAuthService {
 
     public GetTokenResponseDto getToken(String xAuthorization, String grantType, String scope) throws UnauthorizedException, InternalServerException {
         if (!isValidAuthorizationHeader(xAuthorization)) {
-            throw new UnauthorizedException("Invalid authorization code");
+            throw new BadRequestException("Invalid authorization code");
         }
         Map<String, String> parameters = securityParameters(grantType, scope);
         Map<String, String> headers = securityHeaders(xAuthorization);
@@ -43,10 +44,6 @@ public class OAuth2ServiceImpl implements OAuthService {
             GetTokenResponseDto getTokenResponse = oAuth2FeignClientService.getToken(parameters, headers);
             log.info("Token obtained correctly");
             return getTokenResponse;
-        } catch (FeignException.Unauthorized ex) {
-            log.error("OAuth2 standard error: Unauthorized");
-            log.error(ex.getMessage(), ex);
-            throw new UnauthorizedException("Unauthorized to request token from security");
         } catch (FeignException.BadRequest ex) {
             log.error("OAuth2 standard error: Bad Request");
             log.error(ex.getMessage(), ex);
@@ -59,8 +56,25 @@ public class OAuth2ServiceImpl implements OAuthService {
     }
 
     @Override
-    public Object checkToken(String token) {
-        return null;
+    public CheckTokenResponseDto checkToken(String xAuthorization, String token) {
+        if (token == null || token.isEmpty()) {
+            throw new BadRequestException("Empty or null token is provided to the api");
+        }
+        Map<String, String> parameters = checkTokenParam(token);
+        Map<String, String> headers = securityHeaders(xAuthorization);
+        try {
+            CheckTokenResponseDto checkTokenResponse = oAuth2FeignClientService.introspectToken(parameters, headers);
+            log.info("Token validated correctly");
+            return checkTokenResponse;
+        } catch (FeignException.BadRequest ex) {
+            log.error("OAuth2 standard error: Bad Request");
+            log.error(ex.getMessage(), ex);
+            throw new BadRequestException("Invalid data on the request");
+        } catch (Exception ex) {
+            log.error("Unknown error ocurred");
+            log.error(ex.getMessage(), ex);
+            throw new InternalServerException("An Unknown error occurred while validating token");
+        }
     }
 
     @Override
@@ -79,6 +93,12 @@ public class OAuth2ServiceImpl implements OAuthService {
         Map<String, String> headers = new HashMap<>();
         headers.put(Header.X_AUTHORIZATION, xAuthorization);
         headers.put(Header.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        return headers;
+    }
+
+    private Map<String, String> checkTokenParam(String token) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Param.TOKEN, token);
         return headers;
     }
 

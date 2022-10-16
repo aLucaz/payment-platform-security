@@ -5,6 +5,9 @@ new version of Spring Security which has deprecated the WebSecurityConfigurerAda
 ## Technologies and Concepts used
 
 - Oauth2
+  - token generation
+  - token introspection
+  - token revokation
 - Spring Security
 - Client Credentials Flow for server to server communication
 - Java 11
