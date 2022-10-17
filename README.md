@@ -11,3 +11,32 @@ new version of Spring Security which has deprecated the WebSecurityConfigurerAda
 - Spring Security
 - Client Credentials Flow for server to server communication
 - Java 11
+
+## Project achitecture
+
+In progress
+
+### Project structure
+```
+.
+├── main
+│   ├── java
+│   │   └── pe
+│   │       └── client
+│   │           └── custom
+│   │               └── app
+│   │                   ├── config
+│   │                   │   ├── keys
+│   │                   │   └── properties
+│   │                   ├── controller
+│   │                   ├── domain
+│   │                   ├── dto
+│   │                   ├── exception
+│   │                   ├── service
+│   │                   │   └── impl
+│   │                   └── util
+│   │                       └── constant
+│   └── resources
+│       ├── static
+│       └── templates
+```
