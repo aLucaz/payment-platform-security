@@ -4,6 +4,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.client.custom.app.dto.CheckTokenResponseDto;
+import pe.client.custom.app.dto.GeneralResponseDto;
 import pe.client.custom.app.dto.GetTokenResponseDto;
 import pe.client.custom.app.exception.UnauthorizedException;
 import pe.client.custom.app.service.impl.OAuth2ServiceImpl;
@@ -41,6 +42,17 @@ public class AuthController {
     public ResponseEntity<Object> checkToken(@RequestHeader(name = Header.X_AUTHORIZATION) String xAuthorization,
                                              @RequestParam(name = Param.TOKEN) String token) {
         CheckTokenResponseDto response = authService.checkToken(xAuthorization, token);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(
+        path = Api.API_REVOKE_TOKEN,
+        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> revokeToken(@RequestHeader(name = Header.X_AUTHORIZATION) String xAuthorization,
+                                              @RequestParam(name = Param.TOKEN) String token) {
+        GeneralResponseDto response = authService.revokeToken(xAuthorization, token);
         return ResponseEntity.ok(response);
     }
 }

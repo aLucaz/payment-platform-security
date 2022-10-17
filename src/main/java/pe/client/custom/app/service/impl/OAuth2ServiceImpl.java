@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pe.client.custom.app.config.properties.ClientsDetail;
 import pe.client.custom.app.domain.ClientInformation;
 import pe.client.custom.app.dto.CheckTokenResponseDto;
+import pe.client.custom.app.dto.GeneralResponseDto;
 import pe.client.custom.app.dto.GetTokenResponseDto;
 import pe.client.custom.app.exception.BadRequestException;
 import pe.client.custom.app.exception.InternalServerException;
@@ -57,10 +58,8 @@ public class OAuth2ServiceImpl implements OAuthService {
 
     @Override
     public CheckTokenResponseDto checkToken(String xAuthorization, String token) {
-        if (token == null || token.isEmpty()) {
-            throw new BadRequestException("Empty or null token is provided to the api");
-        }
-        Map<String, String> parameters = checkTokenParam(token);
+        validateAuthorizationAndToken(xAuthorization, token);
+        Map<String, String> parameters = tokenParameters(token);
         Map<String, String> headers = securityHeaders(xAuthorization);
         try {
             CheckTokenResponseDto checkTokenResponse = oAuth2FeignClientService.introspectToken(parameters, headers);
@@ -78,8 +77,34 @@ public class OAuth2ServiceImpl implements OAuthService {
     }
 
     @Override
-    public Object revokeToken(String xAuthorization, String xAuthToken) {
-        return null;
+    public GeneralResponseDto revokeToken(String xAuthorization, String token) {
+        validateAuthorizationAndToken(xAuthorization, token);
+        Map<String, String> parameters = tokenParameters(token);
+        Map<String, String> headers = securityHeaders(xAuthorization);
+        try {
+            oAuth2FeignClientService.revokeToken(parameters, headers);
+            log.info("Token revoked");
+            return GeneralResponseDto.builder()
+                .message("Token revoked successfully")
+                .build();
+        } catch (FeignException.BadRequest ex) {
+            log.error("OAuth2 standard error: Bad Request");
+            log.error(ex.getMessage(), ex);
+            throw new BadRequestException("Invalid data on the request");
+        } catch (Exception ex) {
+            log.error("Unknown error ocurred");
+            log.error(ex.getMessage(), ex);
+            throw new InternalServerException("An Unknown error occurred while validating token");
+        }
+    }
+
+    private void validateAuthorizationAndToken(String xAuthorization, String token) {
+        if (token == null || token.isEmpty()) {
+            throw new BadRequestException("Empty or null token is provided to the api");
+        }
+        if (!isValidAuthorizationHeader(xAuthorization)) {
+            throw new BadRequestException("Invalid authorization code");
+        }
     }
 
     private Map<String, String> securityParameters(String grantType, String scope) {
@@ -96,7 +121,7 @@ public class OAuth2ServiceImpl implements OAuthService {
         return headers;
     }
 
-    private Map<String, String> checkTokenParam(String token) {
+    private Map<String, String> tokenParameters(String token) {
         Map<String, String> headers = new HashMap<>();
         headers.put(Param.TOKEN, token);
         return headers;

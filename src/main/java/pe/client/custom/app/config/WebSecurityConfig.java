@@ -17,6 +17,7 @@ public class WebSecurityConfig {
             .csrf().disable()
             .authorizeRequests()
             .mvcMatchers(HttpMethod.POST, Api.API_CHECK_TOKEN_PATH).permitAll()
+            .mvcMatchers(HttpMethod.DELETE, Api.API_REVOKE_TOKEN_PATH).permitAll()
             .mvcMatchers(HttpMethod.GET, Api.API_GET_TOKEN_PATH).permitAll()
             .anyRequest().authenticated()
             .and()

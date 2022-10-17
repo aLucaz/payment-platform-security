@@ -13,7 +13,7 @@ import java.util.Map;
 
 @FeignClient(
     name = "oauth2-feign-client-service",
-    url = Oauth.OAUTH_URL
+    url = "${payment.platform.security.url}"
 )
 public interface OAuth2FeignClientService {
 
@@ -29,4 +29,9 @@ public interface OAuth2FeignClientService {
     )
     CheckTokenResponseDto introspectToken(@RequestParam Map<String, String> params, @RequestHeader Map<String, String> headers);
 
+    @PostMapping(
+        path = Oauth.OAUTH_DEFAULT_REVOKE_TOKEN,
+        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    )
+    Object revokeToken(@RequestParam Map<String, String> params, @RequestHeader Map<String, String> headers);
 }
