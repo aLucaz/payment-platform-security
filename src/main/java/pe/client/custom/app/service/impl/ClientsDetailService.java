@@ -36,7 +36,6 @@ public class ClientsDetailService {
                 .tokenSettings(
                     TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofSeconds(clientInformation.getAccessTokenValidity()))
-                        .refreshTokenTimeToLive(Duration.ofSeconds(clientInformation.getRefreshTokenValidity()))
                         .build()
                 )
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
