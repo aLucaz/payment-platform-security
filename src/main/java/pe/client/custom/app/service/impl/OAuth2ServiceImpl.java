@@ -11,11 +11,11 @@ import pe.client.custom.app.dto.GeneralResponseDto;
 import pe.client.custom.app.dto.GetTokenResponseDto;
 import pe.client.custom.app.exception.BadRequestException;
 import pe.client.custom.app.exception.InternalServerException;
-import pe.client.custom.app.exception.UnauthorizedException;
 import pe.client.custom.app.service.OAuth2FeignClientService;
 import pe.client.custom.app.service.OAuthService;
 import pe.client.custom.app.util.Decoder;
 import pe.client.custom.app.util.constant.Header;
+import pe.client.custom.app.util.constant.Message;
 import pe.client.custom.app.util.constant.Param;
 
 import java.util.HashMap;
@@ -35,9 +35,9 @@ public class OAuth2ServiceImpl implements OAuthService {
         this.oAuth2FeignClientService = oAuth2FeignClientService;
     }
 
-    public GetTokenResponseDto getToken(String xAuthorization, String grantType, String scope) throws UnauthorizedException, InternalServerException {
+    public GetTokenResponseDto getToken(String xAuthorization, String grantType, String scope) {
         if (invalidAuthorizationHeader(xAuthorization)) {
-            throw new BadRequestException("Invalid authorization code");
+            throw new BadRequestException(Message.INVALID_AUTHORIZATION_CODE_MSG);
         }
         Map<String, String> parameters = securityParameters(grantType, scope);
         Map<String, String> headers = securityHeaders(xAuthorization);
@@ -46,11 +46,11 @@ public class OAuth2ServiceImpl implements OAuthService {
             log.info("Token obtained correctly");
             return getTokenResponse;
         } catch (FeignException.BadRequest ex) {
-            log.error("OAuth2 standard error: Bad Request");
+            log.error(Message.OAUTH2_BAD_REQUEST_LOG);
             log.error(ex.getMessage(), ex);
-            throw new BadRequestException("Invalid data on the request");
+            throw new BadRequestException(Message.INVALID_REQUEST_DATA_MSG);
         } catch (Exception ex) {
-            log.error("Unknown error ocurred");
+            log.error(Message.UNKNOWN_ERROR_LOG);
             log.error(ex.getMessage(), ex);
             throw new InternalServerException("An Unknown error occurred while generating token");
         }
@@ -66,11 +66,11 @@ public class OAuth2ServiceImpl implements OAuthService {
             log.info("Token validated correctly");
             return checkTokenResponse;
         } catch (FeignException.BadRequest ex) {
-            log.error("OAuth2 standard error: Bad Request");
+            log.error(Message.OAUTH2_BAD_REQUEST_LOG);
             log.error(ex.getMessage(), ex);
-            throw new BadRequestException("Invalid data on the request");
+            throw new BadRequestException(Message.INVALID_REQUEST_DATA_MSG);
         } catch (Exception ex) {
-            log.error("Unknown error ocurred");
+            log.error(Message.UNKNOWN_ERROR_LOG);
             log.error(ex.getMessage(), ex);
             throw new InternalServerException("An Unknown error occurred while validating token");
         }
@@ -85,14 +85,14 @@ public class OAuth2ServiceImpl implements OAuthService {
             oAuth2FeignClientService.revokeToken(parameters, headers);
             log.info("Token revoked");
             return GeneralResponseDto.builder()
-                .message("Token revoked successfully")
+                .message(Message.TOKEN_REVOKED_MSG)
                 .build();
         } catch (FeignException.BadRequest ex) {
-            log.error("OAuth2 standard error: Bad Request");
+            log.error(Message.OAUTH2_BAD_REQUEST_LOG);
             log.error(ex.getMessage(), ex);
-            throw new BadRequestException("Invalid data on the request");
+            throw new BadRequestException(Message.INVALID_REQUEST_DATA_MSG);
         } catch (Exception ex) {
-            log.error("Unknown error ocurred");
+            log.error(Message.UNKNOWN_ERROR_LOG);
             log.error(ex.getMessage(), ex);
             throw new InternalServerException("An Unknown error occurred while validating token");
         }
@@ -100,10 +100,10 @@ public class OAuth2ServiceImpl implements OAuthService {
 
     private void validateAuthorizationAndToken(String xAuthorization, String token) {
         if (token == null || token.isEmpty()) {
-            throw new BadRequestException("Empty or null token is provided to the api");
+            throw new BadRequestException(Message.EMPTY_TOKEN_MSG);
         }
         if (invalidAuthorizationHeader(xAuthorization)) {
-            throw new BadRequestException("Invalid authorization code");
+            throw new BadRequestException(Message.INVALID_AUTHORIZATION_CODE_MSG);
         }
     }
 
@@ -128,9 +128,20 @@ public class OAuth2ServiceImpl implements OAuthService {
     }
 
     private boolean invalidAuthorizationHeader(String authorization) {
+        if (!authorization.contains(Header.X_AUTHORIZATION_TYPE)){
+            return true;
+        }
         String[] authInfo = authorization.split(Header.X_AUTHORIZATION_TYPE);
         String credential = authInfo[1].trim();
-        credential = Decoder.decodeFromBase64(credential);
+        try {
+            credential = Decoder.decodeFromBase64(credential);
+        } catch (IllegalArgumentException ex){
+            log.error(ex.getMessage(), ex);
+            return true;
+        }
+        if (!credential.contains(Header.X_CREDENTIAL_SEPARATOR)){
+            return true;
+        }
         int separatorIndex = credential.indexOf(Header.X_CREDENTIAL_SEPARATOR);
         String clientId = credential.substring(0, separatorIndex);
         String clientSecret = credential.substring(separatorIndex + 1);

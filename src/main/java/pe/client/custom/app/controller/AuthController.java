@@ -29,7 +29,7 @@ public class AuthController {
     )
     public ResponseEntity<Object> getToken(@RequestHeader(name = Header.X_AUTHORIZATION) String xAuthorization,
                                            @RequestParam(name = Param.GRANT_TYPE) String grantType,
-                                           @RequestParam(name = Param.SCOPE) String scope) throws UnauthorizedException {
+                                           @RequestParam(name = Param.SCOPE) String scope) {
         GetTokenResponseDto response = authService.getToken(xAuthorization, grantType, scope);
         return ResponseEntity.ok(response);
     }
