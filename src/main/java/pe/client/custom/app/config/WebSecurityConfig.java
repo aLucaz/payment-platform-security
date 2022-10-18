@@ -19,6 +19,7 @@ public class WebSecurityConfig {
             .mvcMatchers(HttpMethod.POST, Api.API_CHECK_TOKEN_PATH).permitAll()
             .mvcMatchers(HttpMethod.DELETE, Api.API_REVOKE_TOKEN_PATH).permitAll()
             .mvcMatchers(HttpMethod.GET, Api.API_GET_TOKEN_PATH).permitAll()
+            .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement()

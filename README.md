@@ -9,8 +9,11 @@ new version of Spring Security which has deprecated the WebSecurityConfigurerAda
   - token introspection
   - token revokation
 - Spring Security
-- Client Credentials Flow for server to server communication
-- Java 11
+  - Spring security authorization server
+- Client Credentials Grant Type
+  - server to server communication
+- Java 8
+- OpenAPI 3.0 
 
 ## Project achitecture
 
@@ -40,3 +43,9 @@ In progress
 │       ├── static
 │       └── templates
 ```
+
+## Project documentation
+
+Access to the path `/swagger-ui/index.html`
+
+![](resources/swagger-page-image.jpeg)
