@@ -36,7 +36,7 @@ public class OAuth2ServiceImpl implements OAuthService {
     }
 
     public GetTokenResponseDto getToken(String xAuthorization, String grantType, String scope) throws UnauthorizedException, InternalServerException {
-        if (!isValidAuthorizationHeader(xAuthorization)) {
+        if (invalidAuthorizationHeader(xAuthorization)) {
             throw new BadRequestException("Invalid authorization code");
         }
         Map<String, String> parameters = securityParameters(grantType, scope);
@@ -102,7 +102,7 @@ public class OAuth2ServiceImpl implements OAuthService {
         if (token == null || token.isEmpty()) {
             throw new BadRequestException("Empty or null token is provided to the api");
         }
-        if (!isValidAuthorizationHeader(xAuthorization)) {
+        if (invalidAuthorizationHeader(xAuthorization)) {
             throw new BadRequestException("Invalid authorization code");
         }
     }
@@ -127,14 +127,14 @@ public class OAuth2ServiceImpl implements OAuthService {
         return headers;
     }
 
-    private boolean isValidAuthorizationHeader(String authorization) {
+    private boolean invalidAuthorizationHeader(String authorization) {
         String[] authInfo = authorization.split(Header.X_AUTHORIZATION_TYPE);
         String credential = authInfo[1].trim();
         credential = Decoder.decodeFromBase64(credential);
         int separatorIndex = credential.indexOf(Header.X_CREDENTIAL_SEPARATOR);
         String clientId = credential.substring(0, separatorIndex);
         String clientSecret = credential.substring(separatorIndex + 1);
-        return isValidClientIdAndSecret(clientId, clientSecret);
+        return !isValidClientIdAndSecret(clientId, clientSecret);
     }
 
     private boolean isValidClientIdAndSecret(String clientId, String clientSecret) {
