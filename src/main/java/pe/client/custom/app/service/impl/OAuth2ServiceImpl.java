@@ -153,7 +153,7 @@ public class OAuth2ServiceImpl implements OAuthService {
             .getClientInformationList()
             .stream()
             .filter(element -> element.getClientId().equals(clientId))
-            .collect(Collectors.toList());
+            .toList();
         if (filteredInformationList.isEmpty()) {
             return false;
         }

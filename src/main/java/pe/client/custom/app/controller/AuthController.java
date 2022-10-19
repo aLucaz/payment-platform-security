@@ -40,11 +40,13 @@ public class AuthController {
                     ),
                     examples = {
                         @ExampleObject(
-                            value = "{\n" +
-                                "    \"access_token\": \"eyJraWQiOiIyMGRmNjM3ZS03YTYxLTRiM2UtOTVkMC02YThjMjMwNWMzZmQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJBUlRDTElFTlQiLCJhdWQiOiJBUlRDTElFTlQiLCJuYmYiOjE2NjYxMTU4MjYsInNjb3BlIjpbIlJFQUQiXSwiaXNzIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwODUiLCJleHAiOjE2NjYxMTcwMjYsImlhdCI6MTY2NjExNTgyNiwiYXV0aG9yaXRpZXMiOltdfQ.bOWY_cYsiqUhBx8YHtwwJjymG3fbqEMjLdDq7OUJ_p-Rawv08RjmHwVC9JlDSA1yexrXdjkI_YLld8pmok7vqMYMFdepqOquNf-iQLyFqEPHUKH5PDjGPow-uoHQqF4aEOH4_qratAKjAY1vSOOwj98zMcyffNjqj7p3rPpRzYJLnCTfcva5Y55opYAyqmlcby3wdIetgyAw8ntjphY2o9IempNMFuXLeghaKO-ihCqTUi2pLABAACP3wVObWdZCdg6caT2Fri0E6PvIGLRVgSEhreRFNxitu9eybTc0Ku7-Gh8SlmC4UZeSR__jP_jvLHYQm_Vif3Ll28vIjMwX9A\",\n" +
-                                "    \"token_type\": \"Bearer\",\n" +
-                                "    \"expires_in\": 1200\n" +
-                                "}"
+                            value = """
+                                {
+                                    "access_token": "eyJraWQiOiIyMGRmNjM3ZS03YTYxLTRiM2UtOTVkMC02YThjMjMwNWMzZmQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJBUlRDTElFTlQiLCJhdWQiOiJBUlRDTElFTlQiLCJuYmYiOjE2NjYxMTU4MjYsInNjb3BlIjpbIlJFQUQiXSwiaXNzIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwODUiLCJleHAiOjE2NjYxMTcwMjYsImlhdCI6MTY2NjExNTgyNiwiYXV0aG9yaXRpZXMiOltdfQ.bOWY_cYsiqUhBx8YHtwwJjymG3fbqEMjLdDq7OUJ_p-Rawv08RjmHwVC9JlDSA1yexrXdjkI_YLld8pmok7vqMYMFdepqOquNf-iQLyFqEPHUKH5PDjGPow-uoHQqF4aEOH4_qratAKjAY1vSOOwj98zMcyffNjqj7p3rPpRzYJLnCTfcva5Y55opYAyqmlcby3wdIetgyAw8ntjphY2o9IempNMFuXLeghaKO-ihCqTUi2pLABAACP3wVObWdZCdg6caT2Fri0E6PvIGLRVgSEhreRFNxitu9eybTc0Ku7-Gh8SlmC4UZeSR__jP_jvLHYQm_Vif3Ll28vIjMwX9A",
+                                    "token_type": "Bearer",
+                                    "expires_in": 1200
+                                }
+                                """
                         )
                     }
                 )
@@ -77,13 +79,15 @@ public class AuthController {
                     ),
                     examples = {
                         @ExampleObject(
-                            value = "{\n" +
-                                "    \"active\": true,\n" +
-                                "    \"exp\": 1666123875,\n" +
-                                "    \"authorities\": [],\n" +
-                                "    \"client_id\": \"ARTCLIENT\",\n" +
-                                "    \"scope\": \"READ\"\n" +
-                                "}"
+                            value = """
+                                {
+                                    "active": true,
+                                    "exp": 1666123875,
+                                    "authorities": [],
+                                    "client_id": "ARTCLIENT",
+                                    "scope": "READ"
+                                }
+                                """
                         )
                     }
                 )
@@ -115,9 +119,11 @@ public class AuthController {
                     ),
                     examples = {
                         @ExampleObject(
-                            value = "{\n" +
-                                "    \"message\": \"Token revoked successfully\"\n" +
-                                "}"
+                            value = """
+                                {
+                                    "message": "Token revoked successfully"
+                                }
+                                """
                         )
                     }
                 )

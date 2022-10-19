@@ -12,7 +12,7 @@ new version of Spring Security which has deprecated the WebSecurityConfigurerAda
   - Spring security authorization server
 - Client Credentials Grant Type
   - server to server communication
-- Java 8
+- Java 11
 - OpenAPI 3.0 
 
 ## Project achitecture
