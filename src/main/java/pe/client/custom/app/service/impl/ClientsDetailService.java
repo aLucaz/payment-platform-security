@@ -1,6 +1,5 @@
 package pe.client.custom.app.service.impl;
 
-import jdk.nashorn.internal.runtime.Scope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
