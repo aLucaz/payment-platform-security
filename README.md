@@ -1,6 +1,6 @@
 # Payment Platform Security
 Security layer of a payment platform, this project implements the 
-new version of Spring Security which has deprecated the WebSecurityConfigurerAdapter.
+new version of Spring Security OAuth2 Authorization Server which has deprecated the WebSecurityConfigurerAdapter.
 
 ## Technologies and Concepts used
 
@@ -49,3 +49,7 @@ In progress
 Access to the path `/swagger-ui/index.html`
 
 ![](resources/swagger-page-image.jpeg)
+
+## Running
+
+![](resources/server.png)

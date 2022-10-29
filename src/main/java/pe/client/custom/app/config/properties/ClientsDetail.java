@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "client.properties")
+@ConfigurationProperties(prefix = "security.properties")
 public class ClientsDetail {
     private List<ClientInformation> clientInformationList;
 }
