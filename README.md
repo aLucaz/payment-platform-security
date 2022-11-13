@@ -17,7 +17,7 @@ new version of Spring Security OAuth2 Authorization Server which has deprecated 
 
 ## Project achitecture
 
-In progress
+![](resources/draw-architecture.png)
 
 ### Project structure
 ```
